@@ -8,7 +8,7 @@ mod unescape;
 
 use clap::Parser;
 use std::{
-    io::{Write, stdout},
+    io::{stdout, Write},
     process,
 };
 
@@ -51,15 +51,14 @@ fn try_main() -> Result<()> {
         })
         .collect::<Result<Vec<_>>>()?;
 
-    let replaced: Vec<_> = {
-        use rayon::prelude::*;
-        mmaps
-            .par_iter()
-            .map(|mmap| replacer.replace(mmap))
-            .collect()
-    };
-
     if options.preview || sources.first() == Some(&Source::Stdin) {
+        let replaced: Vec<_> = {
+            use rayon::prelude::*;
+            mmaps
+                .par_iter()
+                .map(|mmap| replacer.replace(mmap))
+                .collect()
+        };
         let needs_separator = sources.len() > 1;
         let mut handle = stdout().lock();
 
@@ -70,19 +69,30 @@ fn try_main() -> Result<()> {
             handle.write_all(&replaced)?;
         }
     } else {
-        // Windows requires closing mmap before writing:
-        // > The requested operation cannot be performed on a file with a user-mapped section open
-        #[cfg(target_family = "windows")]
-        let replaced: Vec<Vec<u8>> =
-            replaced.into_iter().map(|r| r.to_vec()).collect();
-        #[cfg(target_family = "windows")]
-        drop(mmaps);
+        let replaced: Vec<_> = {
+            use rayon::prelude::*;
+            sources
+                .par_iter()
+                .zip(&mmaps)
+                .map(|(source, mmap)| match source {
+                    Source::File(path) => output::prepare_write(
+                        path,
+                        mmap,
+                        &replacer,
+                        options.sync,
+                        options.update_metadata,
+                    ),
+                    Source::Stdin => unreachable!("stdin is written to stdout"),
+                })
+                .collect()
+        };
 
         let failed_jobs = sources
             .iter()
             .zip(replaced)
             .filter_map(|(source, replaced)| match source {
-                Source::File(path) => output::write_atomic(path, &replaced)
+                Source::File(path) => replaced
+                    .and_then(|write| write.commit(options.sync))
                     .err()
                     .map(|e| (path.to_owned(), e)),
                 _ => None,
@@ -90,8 +100,11 @@ fn try_main() -> Result<()> {
             .collect::<Vec<_>>();
 
         if !failed_jobs.is_empty() {
+            drop(mmaps);
             return Err(Error::FailedJobs(FailedJobs(failed_jobs)));
         }
+
+        drop(mmaps);
     }
 
     Ok(())

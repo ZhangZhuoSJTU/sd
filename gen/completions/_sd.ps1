@@ -27,6 +27,8 @@ Register-ArgumentCompleter -Native -CommandName 'sd' -ScriptBlock {
             [CompletionResult]::new('--flags', 'flags', [CompletionResultType]::ParameterName, 'Regex flags. May be combined (like `-f mc`).')
             [CompletionResult]::new('-p', 'p', [CompletionResultType]::ParameterName, 'Display changes in a human reviewable format (the specifics of the format are likely to change in the future)')
             [CompletionResult]::new('--preview', 'preview', [CompletionResultType]::ParameterName, 'Display changes in a human reviewable format (the specifics of the format are likely to change in the future)')
+            [CompletionResult]::new('--sync', 'sync', [CompletionResultType]::ParameterName, 'Synchronize file changes to disk; same-size overwrites remain non-atomic')
+            [CompletionResult]::new('--update-metadata', 'update-metadata', [CompletionResultType]::ParameterName, 'Update file metadata (timestamps)')
             [CompletionResult]::new('-F', 'F ', [CompletionResultType]::ParameterName, 'Treat FIND and REPLACE_WITH args as literal strings')
             [CompletionResult]::new('--fixed-strings', 'fixed-strings', [CompletionResultType]::ParameterName, 'Treat FIND and REPLACE_WITH args as literal strings')
             [CompletionResult]::new('-h', 'h', [CompletionResultType]::ParameterName, 'Print help (see more with ''--help'')')

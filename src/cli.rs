@@ -20,6 +20,14 @@ pub struct Options {
     /// format are likely to change in the future).
     pub preview: bool,
 
+    #[arg(long)]
+    /// Synchronize file changes to disk; same-size overwrites remain non-atomic.
+    pub sync: bool,
+
+    #[arg(long)]
+    /// Update file metadata (timestamps)
+    pub update_metadata: bool,
+
     #[arg(
         short = 'F',
         long = "fixed-strings",

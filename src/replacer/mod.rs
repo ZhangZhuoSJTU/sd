@@ -52,7 +52,7 @@ impl Replacer {
                     },
                     'w' => {
                         regex = regex::bytes::RegexBuilder::new(&format!(
-                            "\\b{}\\b",
+                            "\\b(?:{})\\b",
                             look_for
                         ));
                     },
@@ -92,32 +92,14 @@ impl Replacer {
         }
     }
 
-    /// A modified form of [`regex::bytes::Regex::replacen`] that supports
-    /// coloring replacements
+    /// Delegates to [`regex::bytes::Regex::replacen`].
     pub(crate) fn replacen<'haystack, R: regex::bytes::Replacer>(
         regex: &regex::bytes::Regex,
         limit: usize,
         haystack: &'haystack [u8],
         _use_color: bool,
-        mut rep: R,
+        rep: R,
     ) -> Cow<'haystack, [u8]> {
-        let mut it = regex.captures_iter(haystack).enumerate().peekable();
-        if it.peek().is_none() {
-            return Cow::Borrowed(haystack);
-        }
-        let mut new = Vec::with_capacity(haystack.len());
-        let mut last_match = 0;
-        for (i, cap) in it {
-            // unwrap on 0 is OK because captures only reports matches
-            let m = cap.get(0).unwrap();
-            new.extend_from_slice(&haystack[last_match..m.start()]);
-            rep.replace_append(&cap, &mut new);
-            last_match = m.end();
-            if limit > 0 && i >= limit - 1 {
-                break;
-            }
-        }
-        new.extend_from_slice(&haystack[last_match..]);
-        Cow::Owned(new)
+        regex.replacen(haystack, limit, rep)
     }
 }

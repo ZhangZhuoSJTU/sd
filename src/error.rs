@@ -9,7 +9,7 @@ pub enum Error {
     #[error(transparent)]
     File(#[from] std::io::Error),
     #[error("failed to move file: {0}")]
-    TempfilePersist(#[from] tempfile::PersistError),
+    TempfilePersist(#[source] std::io::Error),
     #[error("invalid path: {0}")]
     InvalidPath(PathBuf),
     #[error("{0}")]

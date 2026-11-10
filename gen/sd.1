@@ -8,7 +8,7 @@ sd
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
 .SH SYNOPSIS
-\fBsd\fR [\fB\-p\fR|\fB\-\-preview\fR] [\fB\-F\fR|\fB\-\-fixed\-strings\fR] [\fB\-n\fR|\fB\-\-max\-replacements\fR] [\fB\-f\fR|\fB\-\-flags\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] <\fIFIND\fR> <\fIREPLACE_WITH\fR> [\fIFILES\fR] 
+\fBsd\fR [\fB\-p\fR|\fB\-\-preview\fR] [\fB\-\-sync\fR] [\fB\-\-update\-metadata\fR] [\fB\-F\fR|\fB\-\-fixed\-strings\fR] [\fB\-n\fR|\fB\-\-max\-replacements\fR] [\fB\-f\fR|\fB\-\-flags\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] <\fIFIND\fR> <\fIREPLACE_WITH\fR> [\fIFILES\fR]
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
 .SH DESCRIPTION
@@ -18,6 +18,12 @@ sd
 .TP
 \fB\-p\fR, \fB\-\-preview\fR
 Display changes in a human reviewable format (the specifics of the format are likely to change in the future)
+.TP
+\fB\-\-sync\fR
+Synchronize file changes to disk; same\-size overwrites remain non\-atomic
+.TP
+\fB\-\-update\-metadata\fR
+Update file metadata (timestamps)
 .TP
 \fB\-F\fR, \fB\-\-fixed\-strings\fR
 Treat FIND and REPLACE_WITH args as literal strings

@@ -21,6 +21,8 @@ _sd() {
 '--flags=[Regex flags. May be combined (like \`-f mc\`).]:FLAGS: ' \
 '-p[Display changes in a human reviewable format (the specifics of the format are likely to change in the future)]' \
 '--preview[Display changes in a human reviewable format (the specifics of the format are likely to change in the future)]' \
+'--sync[Synchronize file changes to disk; same-size overwrites remain non-atomic]' \
+'--update-metadata[Update file metadata (timestamps)]' \
 '-F[Treat FIND and REPLACE_WITH args as literal strings]' \
 '--fixed-strings[Treat FIND and REPLACE_WITH args as literal strings]' \
 '-h[Print help (see more with '\''--help'\'')]' \

@@ -24,6 +24,8 @@ set edit:completion:arg-completer[sd] = {|@words|
             cand --flags 'Regex flags. May be combined (like `-f mc`).'
             cand -p 'Display changes in a human reviewable format (the specifics of the format are likely to change in the future)'
             cand --preview 'Display changes in a human reviewable format (the specifics of the format are likely to change in the future)'
+            cand --sync 'Synchronize file changes to disk; same-size overwrites remain non-atomic'
+            cand --update-metadata 'Update file metadata (timestamps)'
             cand -F 'Treat FIND and REPLACE_WITH args as literal strings'
             cand --fixed-strings 'Treat FIND and REPLACE_WITH args as literal strings'
             cand -h 'Print help (see more with ''--help'')'
